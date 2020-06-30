@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import pylab
-from myColorsPy import *
+from myColors import *
 
 def parse_token(bn,token):
     """
-    Obtains the value associated with the given within the basename."
+    Obtains the value associated with the given within the basename.
 
     Parameters
     ----------
