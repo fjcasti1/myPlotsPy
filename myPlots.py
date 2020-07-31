@@ -18,43 +18,6 @@ try:
 except Exception as ex:
   print('MKL ERROR -- ',ex)
 
-def parse_token(bn,token):
-    """
-    Obtains the value associated with the given within the basename.
-
-    Parameters
-    ----------
-    bn: string, expected.
-        The basename fo the file.
-    token: string, expected.
-        The token to be parsed.
-
-    Returns
-    -------
-        The value associated with the token.
-
-    Example
-    -------
-        bn = str1val1_str2val2_str3val3.ext
-        tokens = [str1,str2,str3]
-        values = [parse_token(bn,token) for token in tokens]
-        values will be [val1,val2,val3]
-    """
-    return bn.split(token)[1].split('_')[0]
-
-def read_vtk(f):
-    import pyvista as pv
-    """
-    Reads a vtk file
-    It requires PyVista.
-    """
-    mesh = pv.read(f)
-    pts  = mesh.points
-    M,N  = [ mesh.dimensions[k] for k in [0,-1] ]
-    R,Z  = [ x.reshape(M,N).T for x in pts[:,[0,-1]].T ]
-    d    = { k:mesh[k].reshape(M,N).T for k in mesh.array_names }
-    return R,Z,d
-
 def no_ax_fig(k=1,figBaseSize=6,Gamma=1):
     """
     Generates a figure of size (figBaseSize,Gamma*figBaseSize) with 1 axes.
