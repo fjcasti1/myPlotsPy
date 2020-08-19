@@ -1,6 +1,19 @@
 #!/usr/bin/env python
 from numpy import *
 
+def find_tokens(basename):
+  bn_list = basename.split('_')
+  token_list = []
+  for item in bn_list:
+    token = ''
+    for char in item:
+      if char.isdigit():
+        token_list.append(token)
+        break
+      else:
+        token += char
+  return token_list
+
 def parse_token(bn,token):
     """
     Obtains the value associated with the given within the basename.
@@ -26,27 +39,27 @@ def parse_token(bn,token):
     return bn.split(token)[1].split('_')[0]
 
 def read_FD_restart(f):
-    hdt = dtype('(4)i4, (4)f8, (2)i4, (7)f8, i4') # header data type
-    pdt = dtype('i4') # padding data type
-    with open(f,'rb') as fh:
-        header= fromfile(fh,dtype=hdt,count=1)
-        Nz    = header[0][0][1]  # M=Nz, N=Nr
-        Nr    = header[0][0][2]  # M=Nz, N=Nr
-        Gamma = header[0][3][5]
-        eta   = header[0][3][6]
-        t     = header[0][1][3]
-        udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr))
-        s, x, g = read_FD_field(fh,udt,pdt)
-    z = linspace(0, Gamma, Nz)
-    r = linspace(0, 1, Nr)
-    Z,R = meshgrid(z,r,indexing='ij')
-    d = {
-        'sf' : s,
-        'wt' : x,
-        'Lt' : g,
-        't'  : t,
-    }
-    return R,Z,d
+  hdt = dtype('(4)i4, (4)f8, (2)i4, (7)f8, i4') # header data type
+  pdt = dtype('i4') # padding data type
+  with open(f,'rb') as fh:
+    header= fromfile(fh,dtype=hdt,count=1)
+    Nz    = header[0][0][1]  # M=Nz, N=Nr
+    Nr    = header[0][0][2]  # M=Nz, N=Nr
+    Gamma = header[0][3][5]
+    eta   = header[0][3][6]
+    t     = header[0][1][3]
+    udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr))
+    s, x, g = read_FD_field(fh,udt,pdt)
+  z = linspace(0, Gamma, Nz)
+  r = linspace(0, 1, Nr)
+  Z,R = meshgrid(z,r,indexing='ij')
+  d = {
+    'sf' : s,
+    'wt' : x,
+    'Lt' : g,
+    't'  : t,
+  }
+  return R,Z,d
 
 def read_FD_field(fheader,udt,pdt,pcount=1):
   pad     = fromfile(fheader,dtype=pdt,count=1)
@@ -60,15 +73,15 @@ def read_FD_field(fheader,udt,pdt,pcount=1):
   return (s,x,g)
 
 def read_vtk(f):
-    import pyvista as pv
-    """
-    Reads a vtk file
-    It requires PyVista.
-    """
-    mesh = pv.read(f)
-    pts  = mesh.points
-    M,N  = [ mesh.dimensions[k] for k in [0,-1] ]
-    R,Z  = [ x.reshape(M,N).T for x in pts[:,[0,-1]].T ]
-    d    = { k:mesh[k].reshape(M,N).T for k in mesh.array_names }
-    return R,Z,d
+  import pyvista as pv
+  """
+  Reads a vtk file
+  It requires PyVista.
+  """
+  mesh = pv.read(f)
+  pts  = mesh.points
+  M,N  = [ mesh.dimensions[k] for k in [0,-1] ]
+  R,Z  = [ x.reshape(M,N).T for x in pts[:,[0,-1]].T ]
+  d    = { k:mesh[k].reshape(M,N).T for k in mesh.array_names }
+  return R,Z,d
 
