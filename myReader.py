@@ -87,8 +87,8 @@ def read_freeSurfTop_restart(f):
     t     = header[0][1][3]
     Gamma = header[0][3][5]
     udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr)) # fields data type
-    cdt   = dtype('({:d}) f8'.format(Nr)) # concentration data type
-    s, x, g = read_freeSurfTop_fields(fh,udt,cdt,pdt)
+    cdt   = dtype('({:d},{:d}) f8'.format(1 ,Nr)) # concentration data type
+    s, x, g, c = read_freeSurfTop_fields(fh,udt,cdt,pdt)
   z = linspace(0, Gamma, Nz)
   r = linspace(0, 1, Nr)
   Z,R = meshgrid(z,r,indexing='ij')
@@ -111,7 +111,7 @@ def read_freeSurfTop_fields(fheader,udt,cdt,pdt):
   s = field_s[0].astype(double).T
   x = field_x[0].astype(double).T
   g = field_g[0].astype(double).T
-  c = field_c[0].astype(double)
+  c = field_c[0].astype(double).T
   return (s,x,g,c)
 
 #### Spectral vtk files ####
