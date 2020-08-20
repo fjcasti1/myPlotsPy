@@ -8,8 +8,9 @@ def find_tokens(basename):
     token = ''
     for char in item:
       if char.isdigit():
-        token_list.append(token)
-        break
+        if token is not '':
+          token_list.append(token)
+          break
       else:
         token += char
   return token_list
