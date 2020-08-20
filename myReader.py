@@ -38,7 +38,7 @@ def parse_token(bn,token):
     """
     return bn.split(token)[1].split('_')[0]
 
-def read_FD_restart(f):
+def read_kedgeTop_restart(f):
   hdt = dtype('(4)i4, (4)f8, (2)i4, (7)f8, i4') # header data type
   pdt = dtype('i4') # padding data type
   with open(f,'rb') as fh:
@@ -71,6 +71,29 @@ def read_kedgeTop_FD_fields(fheader,udt,pdt,pcount=1):
   x = field_x[0].astype(double).T
   g = field_g[0].astype(double).T
   return (s,x,g)
+
+def read_freeSurfTop_restart(f):
+  hdt = dtype('(4)i4, (4)f8, (2)i4, (7)f8, i4') # header data type
+  pdt = dtype('i4') # padding data type
+  with open(f,'rb') as fh:
+    header= fromfile(fh,dtype=hdt,count=1)
+    Nz    = header[0][0][1]  # M=Nz, N=Nr
+    Nr    = header[0][0][2]  # M=Nz, N=Nr
+    Gamma = header[0][3][5]
+    eta   = header[0][3][6]
+    t     = header[0][1][3]
+    udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr)) # field data type
+    s, x, g = read_FD_field(fh,udt,pdt)
+  z = linspace(0, Gamma, Nz)
+  r = linspace(0, 1, Nr)
+  Z,R = meshgrid(z,r,indexing='ij')
+  d = {
+    'sf' : s,
+    'wt' : x,
+    'Lt' : g,
+    't'  : t,
+  }
+  return R,Z,d
 
 def read_freeSurfTop_FD_fields(fheader,udt,pdt,pcount=1):
   pad     = fromfile(fheader,dtype=pdt,count=1)
