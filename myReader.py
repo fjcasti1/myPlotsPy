@@ -52,7 +52,7 @@ def read_kedgeTop_restart(f):
     eta   = header[0][3][6]
     t     = header[0][1][3]
     udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr))
-    s, x, g = read_FD_field(fh,udt,pdt)
+    s, x, g = read_kedgeTop_fields(fh,udt,pdt)
   z = linspace(0, Gamma, Nz)
   r = linspace(0, 1, Nr)
   Z,R = meshgrid(z,r,indexing='ij')
