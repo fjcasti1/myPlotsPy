@@ -38,6 +38,8 @@ def parse_token(bn,token):
     """
     return bn.split(token)[1].split('_')[0]
 
+#### Knife Edge Finite Differences ####
+
 def read_kedgeTop_restart(f):
   hdt = dtype('(4)i4, (4)f8, (2)i4, (7)f8, i4') # header data type
   pdt = dtype('i4') # padding data type
@@ -61,7 +63,7 @@ def read_kedgeTop_restart(f):
   }
   return R,Z,d
 
-def read_kedgeTop_FD_fields(fheader,udt,pdt,pcount=1):
+def read_kedgeTop_fields(fheader,udt,pdt,pcount=1):
   pad     = fromfile(fheader,dtype=pdt,count=1)
   field_s = fromfile(fheader,dtype=udt,count=1)
   field_x = fromfile(fheader,dtype=udt,count=1)
@@ -71,6 +73,8 @@ def read_kedgeTop_FD_fields(fheader,udt,pdt,pcount=1):
   x = field_x[0].astype(double).T
   g = field_g[0].astype(double).T
   return (s,x,g)
+
+#### Free Surface Finite Differences ####
 
 def read_freeSurfTop_restart(f):
   hdt = dtype('(4)i4, (4)f8, (2)i4, (7)f8, i4') # header data type
@@ -95,7 +99,7 @@ def read_freeSurfTop_restart(f):
   }
   return R,Z,d
 
-def read_freeSurfTop_FD_fields(fheader,udt,pdt,pcount=1):
+def read_freeSurfTop_fields(fheader,udt,pdt,pcount=1):
   pad     = fromfile(fheader,dtype=pdt,count=1)
   field_s = fromfile(fheader,dtype=udt,count=1)
   field_x = fromfile(fheader,dtype=udt,count=1)
@@ -105,6 +109,8 @@ def read_freeSurfTop_FD_fields(fheader,udt,pdt,pcount=1):
   x = field_x[0].astype(double).T
   g = field_g[0].astype(double).T
   return (s,x,g)
+
+#### Spectral vtk files ####
 
 def read_vtk(f):
   import pyvista as pv
