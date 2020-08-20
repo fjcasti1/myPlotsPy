@@ -112,7 +112,7 @@ def read_freeSurfTop_fields(fheader,udt,cdt,pdt):
   wt = field_wt[0].astype(double).T
   Lt = field_Lt[0].astype(double).T
   c  = field_c[0].astype(double).T
-  return (s,x,g,c)
+  return (sf,wt,Lt,c)
 
 #### Spectral vtk files ####
 
