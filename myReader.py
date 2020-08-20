@@ -77,17 +77,17 @@ def read_kedgeTop_fields(fheader,udt,pdt,pcount=1):
 #### Free Surface Finite Differences ####
 
 def read_freeSurfTop_restart(f):
-  hdt = dtype('(4)i4, (4)f8, (2)i4, (7)f8, i4') # header data type
+  hdt = dtype('(3)i4, (4)f8, (2)i4, (6)f8, i4') # header data type
   pdt = dtype('i4') # padding data type
   with open(f,'rb') as fh:
     header= fromfile(fh,dtype=hdt,count=1)
     Nz    = header[0][0][1]  # M=Nz, N=Nr
     Nr    = header[0][0][2]  # M=Nz, N=Nr
-    Gamma = header[0][3][5]
-    eta   = header[0][3][6]
     t     = header[0][1][3]
-    udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr)) # field data type
-    s, x, g = read_FD_field(fh,udt,pdt)
+    Gamma = header[0][3][5]
+    udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr)) # fields data type
+    cdt   = dtype('({:d}) f8'.format(Nr)) # concentration data type
+    s, x, g = read_freeSurfTop_fields(fh,udt,cdt,pdt)
   z = linspace(0, Gamma, Nz)
   r = linspace(0, 1, Nr)
   Z,R = meshgrid(z,r,indexing='ij')
@@ -95,20 +95,23 @@ def read_freeSurfTop_restart(f):
     'sf' : s,
     'wt' : x,
     'Lt' : g,
+    'c'  : c,
     't'  : t,
   }
   return R,Z,d
 
-def read_freeSurfTop_fields(fheader,udt,pdt,pcount=1):
+def read_freeSurfTop_fields(fheader,udt,cdt,pdt):
   pad     = fromfile(fheader,dtype=pdt,count=1)
   field_s = fromfile(fheader,dtype=udt,count=1)
   field_x = fromfile(fheader,dtype=udt,count=1)
   field_g = fromfile(fheader,dtype=udt,count=1)
+  field_c = fromfile(fheader,dtype=cdt,count=1)
   pad     = fromfile(fheader,dtype=pdt,count=1)
   s = field_s[0].astype(double).T
   x = field_x[0].astype(double).T
   g = field_g[0].astype(double).T
-  return (s,x,g)
+  c = field_c[0].astype(double)
+  return (s,x,g,c)
 
 #### Spectral vtk files ####
 
