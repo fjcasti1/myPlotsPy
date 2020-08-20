@@ -61,7 +61,18 @@ def read_FD_restart(f):
   }
   return R,Z,d
 
-def read_FD_field(fheader,udt,pdt,pcount=1):
+def read_kedgeTop_FD_fields(fheader,udt,pdt,pcount=1):
+  pad     = fromfile(fheader,dtype=pdt,count=1)
+  field_s = fromfile(fheader,dtype=udt,count=1)
+  field_x = fromfile(fheader,dtype=udt,count=1)
+  field_g = fromfile(fheader,dtype=udt,count=1)
+  pad     = fromfile(fheader,dtype=pdt,count=1)
+  s = field_s[0].astype(double).T
+  x = field_x[0].astype(double).T
+  g = field_g[0].astype(double).T
+  return (s,x,g)
+
+def read_freeSurfTop_FD_fields(fheader,udt,pdt,pcount=1):
   pad     = fromfile(fheader,dtype=pdt,count=1)
   field_s = fromfile(fheader,dtype=udt,count=1)
   field_x = fromfile(fheader,dtype=udt,count=1)
