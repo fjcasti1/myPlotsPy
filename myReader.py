@@ -57,10 +57,10 @@ def read_kedgeTop_restart(f):
   r = linspace(0, 1, Nr)
   Z,R = meshgrid(z,r,indexing='ij')
   d = {
-    'sf' : s,
-    'wt' : x,
-    'Lt' : g,
-    't'  : t,
+    's' : s,
+    'x' : x,
+    'g' : g,
+    't' : t,
   }
   return R,Z,d
 
@@ -88,30 +88,30 @@ def read_freeSurfTop_restart(f):
     Gamma = header[0][3][5]
     udt   = dtype('({:d},{:d}) f8'.format(Nz,Nr)) # fields data type
     cdt   = dtype('({:d},{:d}) f8'.format(1 ,Nr)) # concentration data type
-    s, x, g, c = read_freeSurfTop_fields(fh,udt,cdt,pdt)
+    sf, wt, Lt, c = read_freeSurfTop_fields(fh,udt,cdt,pdt)
   z = linspace(0, Gamma, Nz)
   r = linspace(0, 1, Nr)
   Z,R = meshgrid(z,r,indexing='ij')
   d = {
-    'sf' : s,
-    'wt' : x,
-    'Lt' : g,
+    'sf' : sf,
+    'wt' : wt,
+    'Lt' : Lt,
     'c'  : c,
     't'  : t,
   }
   return R,Z,d
 
 def read_freeSurfTop_fields(fheader,udt,cdt,pdt):
-  pad     = fromfile(fheader,dtype=pdt,count=1)
-  field_s = fromfile(fheader,dtype=udt,count=1)
-  field_x = fromfile(fheader,dtype=udt,count=1)
-  field_g = fromfile(fheader,dtype=udt,count=1)
-  field_c = fromfile(fheader,dtype=cdt,count=1)
-  pad     = fromfile(fheader,dtype=pdt,count=1)
-  s = field_s[0].astype(double).T
-  x = field_x[0].astype(double).T
-  g = field_g[0].astype(double).T
-  c = field_c[0].astype(double).T
+  pad      = fromfile(fheader,dtype=pdt,count=1)
+  field_sf = fromfile(fheader,dtype=udt,count=1)
+  field_wt = fromfile(fheader,dtype=udt,count=1)
+  field_Lt = fromfile(fheader,dtype=udt,count=1)
+  field_c  = fromfile(fheader,dtype=cdt,count=1)
+  pad      = fromfile(fheader,dtype=pdt,count=1)
+  sf = field_sf[0].astype(double).T
+  wt = field_wt[0].astype(double).T
+  Lt = field_Lt[0].astype(double).T
+  c  = field_c[0].astype(double).T
   return (s,x,g,c)
 
 #### Spectral vtk files ####
